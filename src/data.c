@@ -538,7 +538,8 @@ matrix load_tags_paths(char **paths, int n, int k)
     int count = 0;
     for(i = 0; i < n; ++i){
         char label[4096];
-        find_replace(paths[i], "imgs", "labels", label);
+        //find_replace(paths[i], "imgs", "labels", label);
+        find_replace(paths[i], "images", "labels", label);
         find_replace(label, "_iconl.jpeg", ".txt", label);
         FILE *file = fopen(label, "r");
         if(!file){
@@ -664,7 +665,8 @@ data load_data_compare(int n, char **paths, int m, int classes, int w, int h)
 
         char imlabel1[4096];
         char imlabel2[4096];
-        find_replace(paths[i*2],   "imgs", "labels", imlabel1);
+        //find_replace(paths[i*2],   "imgs", "labels", imlabel1);
+        find_replace(paths[i*2],   "images", "labels", imlabel1);
         find_replace(imlabel1, "jpg", "txt", imlabel1);
         FILE *fp1 = fopen(imlabel1, "r");
 
@@ -672,7 +674,8 @@ data load_data_compare(int n, char **paths, int m, int classes, int w, int h)
             if (d.y.vals[i][2*id] < iou) d.y.vals[i][2*id] = iou;
         }
 
-        find_replace(paths[i*2+1], "imgs", "labels", imlabel2);
+        //find_replace(paths[i*2+1], "imgs", "labels", imlabel2);
+        find_replace(paths[i*2+1], "images", "labels", imlabel2);
         find_replace(imlabel2, "jpg", "txt", imlabel2);
         FILE *fp2 = fopen(imlabel2, "r");
 

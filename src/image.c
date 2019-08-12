@@ -1112,6 +1112,38 @@ void hsv_to_rgb(image im)
     }
 }
 
+void grayscale_image_3c(image im)
+{
+    assert(im.c == 3);
+    int i, j, k;
+    float scale[] = {0.299, 0.587, 0.114};
+    for(j = 0; j < im.h; ++j){
+        for(i = 0; i < im.w; ++i){
+            float val = 0; 
+            for(k = 0; k < 3; ++k){
+                val += scale[k]*get_pixel(im, i, j, k);
+            }
+            im.data[0*im.h*im.w + im.w*j + i] = val; 
+            im.data[1*im.h*im.w + im.w*j + i] = val; 
+            im.data[2*im.h*im.w + im.w*j + i] = val; 
+        }
+    }
+}
+
+void invert_image(image im)
+{
+    int i, j, k;
+    for(j = 0; j < im.h; ++j){
+        for(i = 0; i < im.w; ++i){
+            float val = 0;
+            for(k = 0; k < 3; ++k){
+                val = get_pixel(im, i, j, k);
+                im.data[k*im.h*im.w + im.w*j + i] = 255 - val;
+            }
+        }
+    }
+}
+
 image grayscale_image(image im)
 {
     assert(im.c == 3);
@@ -1239,6 +1271,13 @@ void distort_image(image im, float hue, float sat, float val)
         scale_image_channel(im, 0, val);
     }
     constrain_image(im);
+
+    // bogdan
+    //int to_invert = rand() % 2;
+    //printf("Inverted: %i\n", to_invert);
+    //if (to_invert == 1) {
+    //    invert_image(im);
+    //}
 }
 
 void random_distort_image(image im, float hue, float saturation, float exposure)
@@ -1411,6 +1450,9 @@ image load_image(char *filename, int w, int h, int c)
 #else
     image out = load_image_stb(filename, c);    // without OpenCV
 #endif  // OPENCV
+
+    //bogdan
+    grayscale_image_3c(out);
 
     if((h && w) && (h != out.h || w != out.w)){
         image resized = resize_image(out, w, h);
